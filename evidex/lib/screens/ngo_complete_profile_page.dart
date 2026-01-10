@@ -1,11 +1,11 @@
+import 'package:evidex/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class NgoCompleteProfilePage extends StatefulWidget {
   const NgoCompleteProfilePage({super.key});
 
   @override
-  State<NgoCompleteProfilePage> createState() =>
-      _NgoCompleteProfilePageState();
+  State<NgoCompleteProfilePage> createState() => _NgoCompleteProfilePageState();
 }
 
 class _NgoCompleteProfilePageState extends State<NgoCompleteProfilePage> {
@@ -24,10 +24,7 @@ class _NgoCompleteProfilePageState extends State<NgoCompleteProfilePage> {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF1765BE),
-                  Color(0xFFFFFFFF),
-                ],
+                colors: [Color(0xFF1765BE), Color(0xFFFFFFFF)],
               ),
             ),
           ),
@@ -37,10 +34,7 @@ class _NgoCompleteProfilePageState extends State<NgoCompleteProfilePage> {
             left: 28,
             right: 28,
             child: Center(
-              child: Image.asset(
-                'assets/login_bg.png',
-                fit: BoxFit.contain,
-              ),
+              child: Image.asset('assets/login_bg.png', fit: BoxFit.contain),
             ),
           ),
 
@@ -81,7 +75,9 @@ class _NgoCompleteProfilePageState extends State<NgoCompleteProfilePage> {
                         const Text(
                           "Complete your profile",
                           style: TextStyle(
-                              fontSize: 26, fontWeight: FontWeight.bold),
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         const Text(
@@ -91,18 +87,19 @@ class _NgoCompleteProfilePageState extends State<NgoCompleteProfilePage> {
 
                         const SizedBox(height: 22),
 
-                        const Text("NGO Name",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 8),
-                        _inputField(
-                          hint: "NGO Name",
-                          icon: Icons.apartment,
+                        const Text(
+                          "NGO Name",
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
+                        const SizedBox(height: 8),
+                        _inputField(hint: "NGO Name", icon: Icons.apartment),
 
                         const SizedBox(height: 18),
 
-                        const Text("NGO ID",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text(
+                          "NGO ID",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(height: 8),
                         _inputField(
                           hint: "Your NGO Administration ID",
@@ -111,8 +108,10 @@ class _NgoCompleteProfilePageState extends State<NgoCompleteProfilePage> {
 
                         const SizedBox(height: 18),
 
-                        const Text("Address",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text(
+                          "Address",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(height: 8),
                         _inputField(
                           hint: "XYZFFDVDDVe",
@@ -121,8 +120,10 @@ class _NgoCompleteProfilePageState extends State<NgoCompleteProfilePage> {
 
                         const SizedBox(height: 18),
 
-                        const Text("Your NGO ID/No.",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text(
+                          "Your NGO ID/No.",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(height: 8),
                         _inputField(
                           hint: "Employee ID",
@@ -141,11 +142,20 @@ class _NgoCompleteProfilePageState extends State<NgoCompleteProfilePage> {
                                 borderRadius: BorderRadius.circular(14),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const HomePage(),
+                                ),
+                              );
+                            },
                             child: const Text(
                               "Create Account",
                               style: TextStyle(
-                                  fontSize: 17, color: Colors.white),
+                                fontSize: 17,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -163,10 +173,7 @@ class _NgoCompleteProfilePageState extends State<NgoCompleteProfilePage> {
     );
   }
 
-  Widget _inputField({
-    required String hint,
-    required IconData icon,
-  }) {
+  Widget _inputField({required String hint, required IconData icon}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -185,8 +192,10 @@ class _NgoCompleteProfilePageState extends State<NgoCompleteProfilePage> {
           hintStyle: TextStyle(color: hintTextColor),
           prefixIcon: Icon(icon, color: primaryBlue),
           border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:evidex/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class PoliticalCompleteProfilePage extends StatefulWidget {
@@ -26,10 +27,7 @@ class _PoliticalCompleteProfilePageState
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF1765BE),
-                  Color(0xFFFFFFFF),
-                ],
+                colors: [Color(0xFF1765BE), Color(0xFFFFFFFF)],
               ),
             ),
           ),
@@ -40,10 +38,7 @@ class _PoliticalCompleteProfilePageState
             left: 28,
             right: 28,
             child: Center(
-              child: Image.asset(
-                'assets/login_bg.png',
-                fit: BoxFit.contain,
-              ),
+              child: Image.asset('assets/login_bg.png', fit: BoxFit.contain),
             ),
           ),
 
@@ -105,10 +100,7 @@ class _PoliticalCompleteProfilePageState
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
-                        _inputField(
-                          hint: "Uttar Pradesh",
-                          icon: Icons.map,
-                        ),
+                        _inputField(hint: "Uttar Pradesh", icon: Icons.map),
 
                         const SizedBox(height: 18),
 
@@ -118,10 +110,7 @@ class _PoliticalCompleteProfilePageState
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
-                        _inputField(
-                          hint: "XYZ Party",
-                          icon: Icons.flag,
-                        ),
+                        _inputField(hint: "XYZ Party", icon: Icons.flag),
 
                         const SizedBox(height: 18),
 
@@ -131,10 +120,7 @@ class _PoliticalCompleteProfilePageState
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
-                        _inputField(
-                          hint: "Chief Minister",
-                          icon: Icons.work,
-                        ),
+                        _inputField(hint: "Chief Minister", icon: Icons.work),
 
                         const SizedBox(height: 18),
 
@@ -144,10 +130,7 @@ class _PoliticalCompleteProfilePageState
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
-                        _inputField(
-                          hint: "CAND001",
-                          icon: Icons.badge,
-                        ),
+                        _inputField(hint: "CAND001", icon: Icons.badge),
 
                         const SizedBox(height: 26),
 
@@ -163,7 +146,12 @@ class _PoliticalCompleteProfilePageState
                               ),
                             ),
                             onPressed: () {
-                              // TODO: Submit political profile
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const HomePage(),
+                                ),
+                              );
                             },
                             child: const Text(
                               "Create Account",
@@ -189,10 +177,7 @@ class _PoliticalCompleteProfilePageState
   }
 
   /// INPUT FIELD WITH SHADOW (NO BORDER)
-  Widget _inputField({
-    required String hint,
-    required IconData icon,
-  }) {
+  Widget _inputField({required String hint, required IconData icon}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -211,8 +196,10 @@ class _PoliticalCompleteProfilePageState
           hintStyle: TextStyle(color: hintTextColor),
           prefixIcon: Icon(icon, color: primaryBlue),
           border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
         ),
       ),
     );
