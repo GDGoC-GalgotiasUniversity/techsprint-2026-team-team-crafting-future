@@ -1,3 +1,4 @@
+import 'package:evidex/screens/floating_bottom_nav.dart';
 import 'package:evidex/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -146,7 +147,7 @@ class _NgoCompleteProfilePageState extends State<NgoCompleteProfilePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => const HomePage(),
+                                  builder: (_) => const FloatingBottomNav(),
                                 ),
                               );
                             },
