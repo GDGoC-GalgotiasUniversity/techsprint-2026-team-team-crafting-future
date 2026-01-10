@@ -35,7 +35,7 @@
 | **Frontend** | React, Tailwind, Vite |
 | **Backend** | Node.js, Express, Python |
 | **Database** | MongoDB, PostgreSQL |
-| **Tools/APIs** | Docker, OpenAI API, AWS |
+| **Tools/APIs** | Docker, Gemini API, AWS |
 
 ---
 
