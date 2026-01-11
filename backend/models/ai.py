@@ -11,6 +11,13 @@ class State(BaseModel):
     refugee_risk: float
 
 
+class StateAll(State):
+    economic_sanctions: float
+    trade_restrictions: float
+    energy_export_controls: float
+    aid_withdrawal_or_injection: float
+
+
 class Behaviour(BaseModel):
     party_affiliation: str
     position_held: str
@@ -39,3 +46,22 @@ class AiContext(BaseModel):
 
 class AiResponse(BaseModel):
     response: str
+
+
+class AnalysisRequest(BaseModel):
+    policy: str
+    index: StateAll
+
+
+class AnalysisResponse(BaseModel):
+    good_changes: bool
+    delta_index: StateAll
+    suggestion: str
+
+
+class LensRequest(BaseModel):
+    persona: Literal["Humantarian", "Finance", "Healthcare", "Infrastructural"]
+    policy: str
+    state: str
+    history: list[str]
+    query: str

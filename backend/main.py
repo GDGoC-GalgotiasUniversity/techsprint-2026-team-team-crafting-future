@@ -6,11 +6,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 from pymongo.collection import Collection, Mapping
 
-from controllers.ai import ai_party
+from controllers.ai import ai_party, impact_analysis, lens
 from controllers.login import login, register
 from controllers.news import get_news_by_category, get_news_by_keyword, insert_news
 from manager import JWTmanager, JWTSettings
-from models.ai import AiContext
+from models.ai import (
+    AiContext,
+    AnalysisRequest,
+    AnalysisResponse,
+    LensRequest,
+    StateAll,
+)
 from models.auth import Ngo, Political, Signin, User
 from models.news import News
 
@@ -22,6 +28,8 @@ class Mymongo(FastAPI):
 
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
 jwt_manager = JWTmanager(JWTSettings())
 
 policies = {
@@ -299,6 +307,117 @@ async def get_policy(state: str):
     )
     debug_log(inp=state, out=resp)
     return resp
+
+
+@app.post(f"{BASE_API}/analysis/{{state}}")
+async def analyze_state(state: str, details: AnalysisRequest):
+    policy_data = policies.get(state)
+    if not policy_data:
+        resp = {
+            "success": False,
+            "error": "No policy data available for this state.",
+        }
+        debug_log(inp=state, out=resp)
+        return resp
+
+    data = next((item for item in policy_data if item["title"] == details.policy), {})
+    deltaidx = StateAll(
+        civilian_well_being=(
+            (
+                details.index.civilian_well_being
+                - data["present_index"]["civilian_well_being"]
+            )
+            * -100
+        )
+        / data["past_index"]["civilian_well_being"],
+        economic_stability=(
+            (
+                details.index.economic_stability
+                - data["present_index"]["economic_stability"]
+            )
+            * -100
+        )
+        / data["past_index"]["economic_stability"],
+        healthcare_access=(
+            (
+                details.index.healthcare_access
+                - data["present_index"]["healthcare_access"]
+            )
+            * -100
+        )
+        / data["past_index"]["healthcare_access"],
+        food_security=(
+            (details.index.food_security - data["present_index"]["food_security"])
+            * -100
+        )
+        / data["past_index"]["food_security"],
+        refugee_risk=(
+            (details.index.refugee_risk - data["present_index"]["refugee_risk"]) * -100
+        )
+        / data["past_index"]["refugee_risk"],
+        economic_sanctions=(
+            (
+                details.index.economic_sanctions
+                - data["present_index"]["economic_sanctions"]
+            )
+            * -100
+        )
+        / data["past_index"]["economic_sanctions"],
+        trade_restrictions=(
+            (
+                details.index.trade_restrictions
+                - data["present_index"]["trade_restrictions"]
+            )
+            * -100
+        )
+        / data["past_index"]["trade_restrictions"],
+        energy_export_controls=(
+            (
+                details.index.energy_export_controls
+                - data["present_index"]["energy_export_controls"]
+            )
+            * -100
+        )
+        / data["past_index"]["energy_export_controls"],
+        aid_withdrawal_or_injection=(
+            (
+                details.index.aid_withdrawal_or_injection
+                - data["present_index"]["aid_withdrawal_or_injection"]
+            )
+            * -100
+        )
+        / data["past_index"]["aid_withdrawal_or_injection"],
+    )
+    try:
+        suggestion = impact_analysis(deltaidx)
+        print(
+            f"detail: {details.index.civilian_well_being} -{data['present_index']['civilian_well_being']}"
+        )
+        good_changes = False
+        if "negative" in suggestion.lower():
+            good_changes = False
+        return AnalysisResponse(
+            good_changes=good_changes, delta_index=deltaidx, suggestion=suggestion
+        )
+    except Exception as e:
+        logger.error(f"Error analyzing state {state}: {e}")
+        resp = {"success": False, "error": "Failed to analyze state"}
+        debug_log(inp=state, out=resp)
+        return resp
+
+
+@app.post(f"{BASE_API}/lens")
+async def lens_analysis(data: LensRequest):
+
+    resp = lens(
+        persona=data.persona,
+        policy=data.policy,
+        state=data.state,
+        history=data.history,
+        query=data.query,
+    )
+    debug_log(inp=data, out=resp)
+    return {"response": resp}
 
 
 if __name__ == "__main__":

@@ -1,8 +1,9 @@
 import os
+from typing import List, Literal
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from models.ai import AiContext, Behaviour, State
+from models.ai import AiContext, Behaviour, State, StateAll
 
 os.environ["GOOGLE_API_KEY"]
 
@@ -99,69 +100,61 @@ def ai_party(data: AiContext):
     return response.content
 
 
-if __name__ == "__main__":
-    print("Running AI Party Analysis...")
-    party1 = AiContext(
-        party1="Party A",
-        party2="Party B",
-        state_data=State(
-            civilian_well_being=6.5,
-            economic_stability=5.0,
-            healthcare_access=7.0,
-            food_security=8.0,
-            refugee_risk=4.0,
-        ),
-        behaviour=Behaviour(
-            party_affiliation="Party A",
-            position_held="Minister of Finance",
-            bills_laws_supported=15,
-            major_projects_initiated=3,
-            controversies_and_legal_cases=1,
-            common_tone=5,
-            engagement_with_citizens=7,
-            social_media_behaviour=6,
-            action_taken=8,
-        ),
-        goals_party1=["Improve healthcare", "Boost economy"],
-        goals_party2=["Enhance education", "Reduce crime"],
-        query="What is the impact of current policies on economic stability?",
-        ruling_party="party1",
-        contradict=False,
-        policy="Economic Reform Act",
-        opinion_of="party1",
+def impact_analysis(diff_index: StateAll) -> str:
+    sysPrompt = f"""
+    You are an expert policy analyst.
+    Given the following changes in state indicators:
+        Economic Sanctions
+        Trade Restrictions
+        Energy Export Controls
+        Aid Withdrawal or Injection
+        Civilian Well-Being
+        Economic Stability
+        Healthcare Access
+        Food Security
+        Refugee Risk
+    Analyze whether these changes are generally positive or negative for the state.
+    Provide specific suggestions for policy adjustments state indicators to improve state outcomes.
+    """
+    content = f"""
+    The changes in state indicators are as follows:
+        Economic Sanctions: {diff_index.economic_sanctions}
+        Trade Restrictions: {diff_index.trade_restrictions}
+        Energy Export Controls: {diff_index.energy_export_controls}
+        Aid Withdrawal or Injection: {diff_index.aid_withdrawal_or_injection}
+        Civilian Well-Being: {diff_index.civilian_well_being}
+        Economic Stability: {diff_index.economic_stability}
+        Healthcare Access: {diff_index.healthcare_access}
+        Food Security: {diff_index.food_security}
+        Refugee Risk: {diff_index.refugee_risk}
+    """
+
+    messages = [
+        ("system", sysPrompt),
+        ("user", content),
+    ]
+    response = model.invoke(messages)
+    return response.content  # type: ignore
+
+
+def lens(
+    persona: Literal["Humantarian", "Finance", "Healthcare", "Infrastructural"],
+    policy: str,
+    state: str,
+    history: List[str],
+    query: str,
+) -> str:
+    messages = (
+        [
+            ("system", f"You are a {persona} expert analyzing policies."),
+            (
+                "user",
+                f"Given the state context: {state}, and the policy: {policy}, along with the following history of policies: {history}, provide an analysis of the policy from a {persona} perspective.",
+            ),
+        ]
+        + [("assistant", h) for h in history]
+        + [("user", query)]
     )
 
-    party2 = AiContext(
-        party1="Party A",
-        party2="Party B",
-        state_data=State(
-            civilian_well_being=6.5,
-            economic_stability=5.0,
-            healthcare_access=7.0,
-            food_security=8.0,
-            refugee_risk=4.0,
-        ),
-        behaviour=Behaviour(
-            party_affiliation="Party B",
-            position_held="Opposition Leader",
-            bills_laws_supported=10,
-            major_projects_initiated=1,
-            controversies_and_legal_cases=2,
-            common_tone=6,
-            engagement_with_citizens=8,
-            social_media_behaviour=7,
-            action_taken=5,
-        ),
-        goals_party1=["Improve healthcare", "Boost economy"],
-        goals_party2=["Enhance education", "Reduce crime"],
-        query="What is the impact of current policies on economic stability?",
-        ruling_party="party1",
-        contradict=True,
-        policy="Economic Reform Act",
-        opinion_of="party2",
-    )
-
-    response = ai_party(party1)
-    response2 = ai_party(party2)
-    print(response)
-    print(response2)
+    response = model.invoke(messages)
+    return response.content  # type: ignore
